@@ -5,28 +5,29 @@ import { Todo } from "../db/sequelize.js";
 const todosRouter = Router();
 
 todosRouter.get('/', async (req: Request, res: Response) => {
-  const userId = req.query.userId;
+  const userId = req.query.userId as string;
 
   if (!userId) {
     return res.status(400).json({ error: "Missing userId in query parameters" });
   }
 
   try {
-    const todos = await getAll(userId as any);
+    const todos = await getAll(Number(userId));
     return res.status(200).json({ todos: todos as Todo[] });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to fetch todos" });
+    console.error('Failed to fetch todos:', error);
+    return res.status(500).json({ error: "Failed to fetch todos", details: (error as Error).message });
   }
 });
 
 todosRouter.post('/', async (req: Request, res: Response) => {
-  const { title, userId } = req.body.todo;
+  const { title, description, userId } = req.body.todo;
   if (typeof title !== 'string' || !userId) {
     return res.status(400).json({ error: "Invalid or missing todo in request body" });
   }
 
   try {
-    const newTodo = await add(title, userId);
+    const newTodo = await add(title, description, Number(userId));
     return res.status(201).json({ todo: newTodo });
   } catch (error) {
     console.error('Error creating todo:', error);

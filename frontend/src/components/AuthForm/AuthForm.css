@@ -83,16 +83,9 @@
   transform: translateY(-1px);
 }
 
-.auth-form__message {
+.auth-form__error {
   text-align: center;
   margin-top: 16px;
   font-size: 0.9rem;
-}
-
-.auth-form__message--success {
-  color: green;
-}
-
-.auth-form__message--error {
   color: red;
 }

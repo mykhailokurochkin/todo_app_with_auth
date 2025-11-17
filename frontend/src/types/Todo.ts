@@ -1,6 +1,7 @@
 export type Todo = {
   id: number,
   title: string,
-  completed: boolean,
+  description?: string,
+  status: 'todo' | 'in progress' | 'done',
   userId: number,
 }

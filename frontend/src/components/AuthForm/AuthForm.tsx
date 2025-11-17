@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { register, login } from '../../api/authClient';
+import { login } from '../../api/authClient';
 import './AuthForm.css';
 
 interface AuthFormProps {
@@ -9,26 +9,15 @@ interface AuthFormProps {
 const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isRegisterMode, setIsRegisterMode] = useState(true);
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setMessage('');
     setError('');
 
     try {
       let result;
-      if (isRegisterMode) {
-        result = await register(email, password);
-        setMessage('Registration successful!');
-      } else {
-        result = await login(email, password);
-        setMessage('Login successful!');
-      }
-      setEmail('');
-      setPassword('');
+      result = await login(email, password);
       onSuccess(result.userId);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Authentication failed.');
@@ -37,7 +26,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
 
   return (
     <div className="auth-form">
-      <h2 className="auth-form__title">{isRegisterMode ? 'Register' : 'Login'}</h2>
+      <h2 className="auth-form__title">Register or Login</h2>
       <form className="auth-form__form" onSubmit={handleSubmit}>
         <div className="auth-form__group">
           <label htmlFor="email" className="auth-form__label">Email:</label>
@@ -46,7 +35,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             id="email"
             className="auth-form__input"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             required
           />
         </div>
@@ -61,13 +50,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             required
           />
         </div>
-        <button type="submit" className="auth-form__button">{isRegisterMode ? 'Register' : 'Login'}</button>
+        <button type="submit" className="auth-form__button">Continue</button>
       </form>
-      <button onClick={() => setIsRegisterMode(!isRegisterMode)} type="button" className="auth-form__switch-button">
-        Switch to {isRegisterMode ? 'Login' : 'Register'}
-      </button>
-      {message && <p className="auth-form__message auth-form__message--success">{message}</p>}
-      {error && <p className="auth-form__message auth-form__message--error">{error}</p>}
+      {error && <p className="auth-form__error">{error}</p>}
     </div>
   );
 };

@@ -58,7 +58,8 @@ User.init(
 export class Todo extends Model<InferAttributes<Todo>, InferCreationAttributes<Todo>> {
   declare id: CreationOptional<number>;
   declare title: string;
-  declare completed: CreationOptional<boolean>;
+  declare status: CreationOptional<string>;
+  declare description: CreationOptional<string>;
   declare userId: ForeignKey<User['id']>;
 }
 
@@ -73,10 +74,15 @@ Todo.init(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    completed: {
-      type: DataTypes.BOOLEAN,
+    status: {
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: false,
+      defaultValue: 'todo',
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: '',
     },
     userId: {
       type: DataTypes.INTEGER,

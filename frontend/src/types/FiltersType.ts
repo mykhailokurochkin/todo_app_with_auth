@@ -1,1 +1,1 @@
-export type FiltersType = 'all' | 'active' | 'completed'
+export type FiltersType = 'all' | 'todo' | 'in progress' | 'done'

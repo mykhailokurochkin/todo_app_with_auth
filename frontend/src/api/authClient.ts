@@ -34,14 +34,6 @@ authClient.interceptors.request.use(
   }
 );
 
-export const register = async (email: string, password: string) => {
-  const response = await authClient.post('/', { email, password });
-  if (response.data.accessToken) {
-    setAuthToken(response.data.accessToken);
-  }
-  return { ...response.data, userId: response.data.user.id };
-};
-
 export const login = async (email: string, password: string) => {
   const response = await authClient.post('/', { email, password });
   if (response.data.accessToken) {
