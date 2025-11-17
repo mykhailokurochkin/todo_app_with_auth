@@ -5,6 +5,7 @@ import cors from 'cors';
 import express from 'express';
 
 import authRouter from './auth/auth.controller.js';
+import todosRouter from './todos/todos.controller.js';
 import { initializeDatabase } from './db/sequelize.js';
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/auth', authRouter);
+app.use('/todos', todosRouter);
 
 const port = Number(process.env.PORT ?? 4000);
 

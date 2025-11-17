@@ -4,8 +4,8 @@ export function getAll(userId: number) {
   return Todo.findAll({ where: { userId } });
 }
 
-export function add(todo: { title: string; completed?: boolean; userId: number }) {
-  return Todo.create(todo);
+export function add(title: string, userId: number) {
+  return Todo.create({ title, completed: false, userId });
 }
 
 export function update(todoId: number, updates: { title?: string; completed?: boolean }) {
