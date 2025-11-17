@@ -55,8 +55,12 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
     onError: () => setCurrentDescription(todo.description || ''),
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentTitle(e.target.value);
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCurrentDescription(e.target.value);
   };
 
   const submitRename = () => {
@@ -73,24 +77,6 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
     }
   };
 
-  const handleInputBlur = () => {
-    submitRename();
-  };
-
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      submitRename();
-    } else if (e.key === 'Escape') {
-      setIsEditing(false);
-      setCurrentTitle(todo.title);
-    }
-  };
-
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setCurrentDescription(e.target.value);
-  };
-
   const submitDescriptionChange = () => {
     const trimmedDescription = currentDescription.trim();
     if (trimmedDescription !== (todo.description || '')) {
@@ -101,14 +87,17 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
     }
   };
 
-  const handleDescriptionKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
+  const handleSaveClick = () => {
+    submitRename();
+    if (currentTitle.trim()) {
       submitDescriptionChange();
-    } else if (e.key === 'Escape') {
-      setIsEditing(false);
-      setCurrentDescription(todo.description || '');
     }
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setCurrentTitle(todo.title);
+    setCurrentDescription(todo.description || '');
   };
 
   return (
@@ -121,9 +110,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
               type="text"
               ref={inputRef}
               value={currentTitle}
-              onChange={handleInputChange}
-              onBlur={handleInputBlur}
-              onKeyDown={handleInputKeyDown}
+              onChange={handleTitleChange}
               placeholder="Title"
             />
             <textarea
@@ -131,38 +118,55 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
               ref={textareaRef}
               value={currentDescription}
               onChange={handleDescriptionChange}
-              onBlur={submitDescriptionChange}
-              onKeyDown={handleDescriptionKeyDown}
               placeholder="Description (optional)"
               rows={2}
             />
-            <button
-              className="todo__item--button todo__item--save"
-              type="button"
-              onClick={() => {
-                submitRename();
-                if (currentTitle.trim()) {
-                  submitDescriptionChange();
-                }
-              }}
-              aria-label="Save todo"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            <div className="todo__item--button-container">
+              <button
+                className="todo__item--button todo__item--cancel"
+                type="button"
+                onClick={handleCancelClick}
+                aria-label="Cancel editing"
               >
-                <path
-                  d="M13.5 4.5L6 12L2.5 8.5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 4L4 12M4 4L12 12"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                className="todo__item--button todo__item--save"
+                type="button"
+                onClick={handleSaveClick}
+                aria-label="Save todo"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.5 4.5L6 12L2.5 8.5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         ) : (
           <div className="todo__item--row">

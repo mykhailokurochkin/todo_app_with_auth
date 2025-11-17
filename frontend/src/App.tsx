@@ -172,7 +172,7 @@ const App = () => {
                     type='button'
                   >Done</button>
                 </div>
-                <button className='logout-button' onClick={handleLogout} type='button'>Logout</button>
+                <button className='logout-button' onClick={handleLogout} type='button'>Log out</button>
               </footer>
             </>
           )}

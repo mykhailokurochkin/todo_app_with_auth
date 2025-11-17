@@ -147,8 +147,12 @@ button {
 }
 
 .todo__item--button:hover {
-  background-color: rgba(239, 68, 68, 0.12);
+  background-color: rgba(37, 99, 235, 0.12);
   transform: translateY(-1px);
+}
+
+.todo__item--edit {
+  color: var(--color-primary);
 }
 
 .todo__item--button svg {
@@ -192,6 +196,12 @@ button {
   width: 100%;
 }
 
+.todo__item--button-container {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
 .todo__item--textarea {
   flex: 1;
   padding: 8px 12px;
@@ -213,12 +223,21 @@ button {
 .todo__item--save {
   color: #22c55e;
   background: rgba(34, 196, 94, 0.1);
-  align-self: flex-end;
+}
+
+.todo__item--cancel {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
 }
 
 .todo__item--save:hover {
   color: #16a34a;
   background: rgba(34, 196, 94, 0.2);
+}
+
+.todo__item--cancel:hover {
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.2);
 }
 
 .todo__item--row {
