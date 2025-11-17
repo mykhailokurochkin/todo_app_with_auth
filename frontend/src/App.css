@@ -92,7 +92,10 @@ button {
   flex: 1;
   font-weight: 500;
   color: #0f172a;
-  cursor: pointer;
+}
+
+.todo__item--label {
+  user-select: none;
 }
 
 .todo__item--checkbox {

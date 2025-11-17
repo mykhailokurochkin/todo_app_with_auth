@@ -1,10 +1,10 @@
 const TodoItem = () => {
   return (
     <div className="todo__item">
-      <label className="todo__item--content">
+      <div className="todo__item--content">
         <input type="checkbox" className="todo__item--checkbox" />
-        <span>TodoItem</span>
-      </label>
+        <span className="todo__item--label">TodoItem</span>
+      </div>
       <button className="todo__item--button" type="button">
         <svg
           width="20"

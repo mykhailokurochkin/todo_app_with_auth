@@ -3,6 +3,7 @@ import 'dotenv/config';
 import {
   CreationOptional,
   DataTypes,
+  ForeignKey,
   InferAttributes,
   InferCreationAttributes,
   Model,
@@ -54,6 +55,49 @@ User.init(
   },
 );
 
+export class Todo extends Model<InferAttributes<Todo>, InferCreationAttributes<Todo>> {
+  declare id: CreationOptional<number>;
+  declare title: string;
+  declare completed: CreationOptional<boolean>;
+  declare userId: ForeignKey<User['id']>;
+}
+
+Todo.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    title: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+    },
+  },
+  {
+    sequelize,
+    tableName: 'todos',
+    timestamps: false,
+  },
+);
+
+User.hasMany(Todo, { foreignKey: 'userId', as: 'todos' });
+Todo.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
 let initialized = false;
 
 export const initializeDatabase = async () => {
@@ -72,4 +116,3 @@ export type PublicUser = {
 };
 
 export { sequelize };
-
