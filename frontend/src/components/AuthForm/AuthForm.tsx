@@ -3,7 +3,7 @@ import { register, login } from '../../api/authClient';
 import './AuthForm.css';
 
 interface AuthFormProps {
-  onSuccess: () => void;
+  onSuccess: (userId: number) => void;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
@@ -19,16 +19,17 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
     setError('');
 
     try {
+      let result;
       if (isRegisterMode) {
-        await register(email, password);
+        result = await register(email, password);
         setMessage('Registration successful!');
       } else {
-        await login(email, password);
+        result = await login(email, password);
         setMessage('Login successful!');
       }
       setEmail('');
       setPassword('');
-      onSuccess();
+      onSuccess(result.userId);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Authentication failed.');
     }

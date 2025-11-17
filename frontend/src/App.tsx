@@ -2,23 +2,30 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import type { FiltersType } from './types/FiltersType';
 import AuthForm from './components/AuthForm/AuthForm';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import TodoItem from './components/TodoItem/TodoItem';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { create, getTodos } from './api/todosClient';
 import { refresh, logout } from './api/authClient';
+import type { Todo } from './types/Todo';
 
 const App = () => {
   const [currentFilter, setCurrentFilter] = useState<FiltersType>('all');
   const [newTodoInput, setNewTodoInput] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState<number | null>(null);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await refresh();
+        const result = await refresh();
         setIsLoggedIn(true);
+        setUserId(result.userId);
       } catch (error) {
         setIsLoggedIn(false);
+        setUserId(null);
       } finally {
         setIsLoading(false);
       }
@@ -26,34 +33,38 @@ const App = () => {
     checkAuth();
   }, []);
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (id: number) => {
     setIsLoggedIn(true);
+    setUserId(id);
   };
 
   const handleLogout = async () => {
     try {
       await logout();
       setIsLoggedIn(false);
+      setUserId(null);
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
-  const id = 25;
-
   const { data: todos, isLoading: isLoadingTodos } = useQuery({
     queryKey: ['todos'],
-    queryFn: () => getTodos(id),
-    enabled: isLoggedIn,
+    queryFn: async () => {
+      const response = await getTodos(userId as number);
+      return response.todos;
+    },
+    enabled: isLoggedIn && userId !== null,
   });
 
   const { mutate: addTodo } = useMutation({
     mutationFn: async () => {
-      return await create(newTodoInput, id);
+      return await create(newTodoInput, userId as number);
     },
     onSuccess: () => {
       setNewTodoInput('');
-    }
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
   });
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -87,10 +98,28 @@ const App = () => {
             </form>
           </header >
           <main className='todo__list'>
+            {isLoadingTodos ? (
+              <div>Loading todos...</div>
+            ) : (
+              todos
+                .filter((todo: Todo) => {
+                  if (currentFilter === 'all') {
+                    return true;
+                  } else if (currentFilter === 'active') {
+                    return !todo.completed;
+                  } else if (currentFilter === 'completed') {
+                    return todo.completed;
+                  }
+                  return true;
+                })
+                .map((todo: Todo) => (
+                <TodoItem key={todo.id} todo={todo} />
+              ))
+            )}
           </main>
           <footer className='footer'>
             <div className="counter">
-              4 items left
+              {todos?.length} items left
             </div>
 
             <div className="filters">
@@ -107,8 +136,8 @@ const App = () => {
                   filters__button 
                   ${currentFilter === 'active' ? 'filters__button--active' : ''}
                 `}
-                  onClick={() => setCurrentFilter('active')}
-                  type='button'
+                onClick={() => setCurrentFilter('active')}
+                type='button'
               >Active</button>
               <button
                 className={`
@@ -120,8 +149,9 @@ const App = () => {
               >Completed</button>
             </div>
 
-            <button className='clear' type='button'>Clear Completed</button>
-            <button onClick={handleLogout} type='button'>Logout</button>
+            <div className="footer__actions">
+              <button className='logout-button' onClick={handleLogout} type='button'>Logout</button>
+            </div>
           </footer>
         </div>
       )}

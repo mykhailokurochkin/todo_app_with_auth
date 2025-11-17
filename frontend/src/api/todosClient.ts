@@ -17,6 +17,15 @@ export const create = async (title: string, userId: string | number) => {
   return response.data;
 };
 
-export const update = (_todoId: number, _updates: { title?: string; completed?: boolean }) => { };
+export const update = async (
+  todoId: number,
+  updates: { title?: string; completed?: boolean }
+) => {
+  const response = await todosClient.put(`/todos/${todoId}`, { updates });
+  return response.data;
+};
 
-export const remove = (_todoId: number) => { };
+export const remove = async (todoId: number) => {
+  const response = await todosClient.delete(`/todos/${todoId}`);
+  return response.data;
+};

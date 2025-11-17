@@ -36,26 +36,26 @@ authClient.interceptors.request.use(
 
 export const register = async (email: string, password: string) => {
   const response = await authClient.post('/', { email, password });
-  if (response.data.token) {
-    setAuthToken(response.data.token);
+  if (response.data.accessToken) {
+    setAuthToken(response.data.accessToken);
   }
-  return response.data;
+  return { ...response.data, userId: response.data.user.id };
 };
 
 export const login = async (email: string, password: string) => {
   const response = await authClient.post('/', { email, password });
-  if (response.data.token) {
-    setAuthToken(response.data.token);
+  if (response.data.accessToken) {
+    setAuthToken(response.data.accessToken);
   }
-  return response.data;
+  return { ...response.data, userId: response.data.user.id };
 };
 
 export const refresh = async () => {
   const response = await authClient.post('/refresh');
-  if (response.data.token) {
-    setAuthToken(response.data.token);
+  if (response.data.accessToken) {
+    setAuthToken(response.data.accessToken);
   }
-  return response.data;
+  return { ...response.data, userId: response.data.user.id };
 };
 
 export const logout = async () => {

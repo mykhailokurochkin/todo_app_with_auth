@@ -24,7 +24,7 @@ const clearRefreshCookie = (res: Response) => {
 type AuthPayload = Pick<
   Awaited<ReturnType<typeof authenticateUser>>,
   'user' | 'accessToken' | 'refreshToken'
->;
+> & { user: { id: number } };
 
 const sendAuthResponse = (
   res: Response,
@@ -35,7 +35,10 @@ const sendAuthResponse = (
   setRefreshCookie(res, payload.refreshToken);
   return res.status(status).json({
     message,
-    user: payload.user,
+    user: {
+      id: payload.user.id,
+      email: payload.user.email,
+    },
     accessToken: payload.accessToken,
   });
 };

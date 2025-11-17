@@ -137,6 +137,12 @@ button {
   border-top: 1px solid #e2e8f0;
 }
 
+.footer__actions {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
 .counter {
   display: flex;
   align-items: center;
@@ -151,7 +157,8 @@ button {
 }
 
 .filters__button,
-.clear {
+.clear,
+.logout-button {
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 8px 16px;
@@ -163,7 +170,8 @@ button {
 }
 
 .filters__button:hover,
-.clear:hover {
+.clear:hover,
+.logout-button:hover {
   color: #0f172a;
   border-color: #e2e8f0;
 }
@@ -174,13 +182,14 @@ button {
   border-color: transparent;
 }
 
-.clear {
-  margin-left: auto;
+.clear,
+.logout-button {
   border-color: #e2e8f0;
   color: #0f172a;
 }
 
-.clear:hover {
+.clear:hover,
+.logout-button:hover {
   background: var(--color-primary);
   color: #fff;
   border-color: var(--color-primary);
