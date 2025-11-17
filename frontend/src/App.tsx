@@ -3,9 +3,15 @@ import { useState } from 'react'
 import './App.css'
 import TodoItem from './components/TodoItem/TodoItem'
 import type { FiltersType } from './types/FiltersType';
+import { useQuery } from '@tanstack/react-query';
 
 const App = () => {
   const [currentFilter, setCurrentFilter] = useState<FiltersType>('all');
+
+  const {} = useQuery({
+    queryKey: ['todos'],
+    queryFn: () => []
+  });
 
   return (
     <div className="todo__app--container">
