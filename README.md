@@ -30,7 +30,7 @@ To get a copy of the project up and running on your local machine, follow these 
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/mykhailokurochkin/todo_app_with_auth.git](https://github.com/mykhailokurochkin/todo_app_with_auth.git)
+    git clone https://github.com/mykhailokurochkin/todo_app_with_auth.git
     ```
 2.  Navigate to the project and follow the detailed setup instructions found in the `backend` and `frontend` folders.
 
